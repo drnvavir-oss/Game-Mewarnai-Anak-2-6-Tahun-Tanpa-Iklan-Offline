@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🎨 Mewarnai Ceria - Game Mewarnai Anak (Tanpa Iklan & Offline)</title>
+  <style>
+    /* ==========================================================================
+       1. CSS VARIABLES & BASE STYLING
+       ========================================================================== */
+    :root {
+      --bg-color: #f0f8ff;
+      --primary: #ff6b6b;
+      --primary-hover: #ff5252;
+      --secondary: #4ecdc4;
+      --accent: #ffe66d;
+      --purple: #a06cd5;
+      --dark-text: #2d3436;
+      --card-bg: #ffffff;
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      --radius: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    body {
+      font-family: 'Fredoka', 'Comic Neue', 'Quicksand', 'Chalkboard SE', sans-serif;
+      background-color: var(--bg-color);
+      background-image: radial-gradient(#4ecdc4 1.5px, transparent 1.5px), radial-gradient(#ff6b6b 1.5px, #f0f8ff 1.5px);
+      background-size: 60px 60px;
+      background-position: 0 0, 30px 30px;
+      color: var(--dark-text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* ==========================================================================
+       2. HEADER & NAVIGATION BAR
+       ========================================================================== */
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    .brand-logo {
+      font-size: 2.2rem;
+      animation: bounce 2s infinite;
+    }
+
+    .brand-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      background: linear-gradient(45deg, #ff6b6b, #a06cd5);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      border: none;
+      background: var(--card-bg);
+      color: var(--dark-text);
+      padding: 10px 18px;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transition: all 0.2s ease;
+      touch-action: manipulation;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    }
+
+    .btn:active {
+      transform: translateY(1px) scale(0.98);
+    }
+
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-secondary { background: var(--secondary); color: white; }
+    .btn-purple { background: var(--purple); color: white; }
+    .btn-accent { background: var(--accent); color: var(--dark-text); }
+
+    /* ==========================================================================
+       3. MAIN LAYOUT & COLORING STUDIO
+       ========================================================================== */
+    main {
+      flex: 1;
+      max-width: 1280px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .studio-container {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .studio-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Left Control Panel */
+    .toolbox {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #6c5ce7;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Color Palette Grid */
+    .palette-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .color-swatch {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      border: 4px solid white;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .color-swatch.active {
+      transform: scale(1.18);
+      border-color: var(--dark-text);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+    }
+
+    /* Tool Selector */
+    .tool-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .tool-btn {
+      padding: 12px;
+      border-radius: 16px;
+      border: 3px solid #f0f0f0;
+      background: white;
+      font-size: 1.8rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tool-btn span {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--dark-text);
+    }
+
+    .tool-btn.active {
+      border-color: var(--primary);
+      background: #fff5f5;
+      transform: scale(1.05);
+    }
+
+    /* Canvas Stage Area */
+    .canvas-stage {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      position: relative;
+    }
+
+    .canvas-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 650px;
+      aspect-ratio: 4/3;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+      background: #ffffff;
+      border: 4px dashed #dfe6e9;
+      touch-action: none;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      cursor: pointer;
+    }
+
+    /* Action Toolbar Under Canvas */
+    .canvas-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+    }
+
+    /* Educational Narration Banner */
+    .narration-card {
+      background: linear-gradient(135deg, #a06cd5, #6c5ce7);
+      color: white;
+      border-radius: 18px;
+      padding: 14px 20px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 12px rgba(108, 92, 231, 0.25);
+    }
+
+    .narration-text {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    /* ==========================================================================
+       4. MODALS & VIEWS (Theme Selection, Gallery, Parental Gate)
+       ========================================================================== */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 200;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+      animation: fadeIn 0.25s ease-out;
+    }
+
+    .modal-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 28px;
+      width: 100%;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    /* Theme Grid Modal */
+    .theme-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .sketch-card {
+      border: 3px solid #edf2f7;
+      border-radius: 16px;
+      padding: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: #fafafa;
+    }
+
+    .sketch-card:hover {
+      border-color: var(--secondary);
+      transform: translateY(-4px);
+      background: white;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+    }
+
+    .sketch-preview {
+      width: 100%;
+      height: 120px;
+      object-fit: contain;
+      margin-bottom: 8px;
+    }
+
+    .sketch-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    /* Gallery Grid */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .artwork-card {
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      background: white;
+      border: 3px solid #f0f0f0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .artwork-img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+    }
+
+    .artwork-actions {
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      background: #fafafa;
+    }
+
+    /* Parental Gate Pin Form */
+    .parent-gate-box {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .pin-input {
+      font-size: 2rem;
+      width: 160px;
+      text-align: center;
+      padding: 10px;
+      border-radius: 12px;
+      border: 3px solid var(--purple);
+      font-weight: 800;
+    }
+
+    /* Keyframe Animations */
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       HEADER & TOP NAVBAR
+       ========================================================================== -->
+  <header>
+    <div class="brand" id="btn-home">
+      <span class="brand-logo">🎨</span>
+      <span class="brand-title">Mewarnai Ceria</span>
+    </div>
+    <div class="nav-actions">
+      <button class="btn btn-secondary" id="btn-theme-modal">🖼️ Pilih Gambar</button>
+      <button class="btn btn-purple" id="btn-gallery-modal">🖼️ Galeri Saya</button>
+      <button class="btn btn-accent" id="btn-parent-modal">🔒 Orang Tua</button>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       MAIN STUDIO CANVAS AREA
+       ========================================================================== -->
+  <main>
+    <div class="studio-container">
+      
+      <!-- Left Controls: Palette & Tools -->
+      <aside class="toolbox">
+        
+        <!-- Color Palette -->
+        <div>
+          <div class="section-title">Pilihan Warna</div>
+          <div class="palette-grid" id="palette-container">
+            <!-- Dynamically populated colors -->
+          </div>
+        </div>
+
+        <!-- Tool Selection -->
+        <div>
+          <div class="section-title">Alat Lukis</div>
+          <div class="tool-grid">
+            <button class="tool-btn active" data-tool="bucket">
+              🪣 <span>Ember Cat</span>
+            </button>
+            <button class="tool-btn" data-tool="brush">
+              🖌️ <span>Kuas</span>
+            </button>
+            <button class="tool-btn" data-tool="sticker">
+              ⭐ <span>Stiker</span>
+            </button>
+            <button class="tool-btn" data-tool="eraser">
+              🧹 <span>Penghapus</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Sticker Selector (Visible when sticker tool active) -->
+        <div id="sticker-container" style="display: none;">
+          <div class="section-title">Pilih Stiker</div>
+          <div class="palette-grid" id="sticker-grid">
+            <button class="btn btn-accent sticker-opt active" data-sticker="⭐">⭐</button>
+            <button class="btn btn-accent sticker-opt" data-sticker="❤️">❤️</button>
+            <button class="btn btn-accent sticker-opt" data-sticker="👑">👑</button>
+            <button class="btn btn-accent sticker-opt" data-sticker="🌸">🌸</button>
+            <button class="btn btn-accent sticker-opt" data-sticker="🎵">🎵</button>
+            <button class="btn btn-accent sticker-opt" data-sticker="🚀">🚀</button>
+            <button class="btn btn-accent sticker-opt" data-sticker="🦄">🦄</button>
+            <button class="btn btn-accent sticker-opt" data-sticker="🎈">🎈</button>
+          </div>
+        </div>
+
+      </aside>
+
+      <!-- Center: Drawing Canvas Area -->
+      <section class="canvas-stage">
+        
+        <div class="narration-card">
+          <div class="narration-text" id="fact-banner">
+            ✨ Kucing suka minum susu dan bermain bola benang!
+          </div>
+          <button class="btn btn-accent" id="btn-speak-fact">🔊 Dengarkan</button>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="paint-canvas" width="800" height="600"></canvas>
+        </div>
+
+        <!-- Canvas Controls -->
+        <div class="canvas-actions">
+          <button class="btn btn-secondary" id="btn-undo">↩️ Urungkan</button>
+          <button class="btn btn-primary" id="btn-clear">🧹 Bersihkan</button>
+          <button class="btn btn-purple" id="btn-save">💾 Simpan Karya</button>
+          <button class="btn btn-accent" id="btn-download">📥 Unduh Gambar</button>
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ==========================================================================
+       MODAL 1: SELEKSI TEMA & GAMBAR
+       ========================================================================== -->
+  <div class="modal-overlay" id="modal-theme">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title">Pilih Sketsa Gambar</h2>
+        <button class="btn btn-primary btn-close-modal">✖️ Tutup</button>
+      </div>
+      <div class="theme-grid" id="sketch-grid">
+        <!-- Dynamically generated sketch cards -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 2: GALERI KARYA ANAK
+       ========================================================================== -->
+  <div class="modal-overlay" id="modal-gallery">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title">🖼️ Galeri Karya Saya</h2>
+        <button class="btn btn-primary btn-close-modal">✖️ Tutup</button>
+      </div>
+      <div class="gallery-grid" id="gallery-container">
+        <!-- Saved artworks rendered here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 3: ZONA ORANG TUA (PARENTAL CONTROL)
+       ========================================================================== -->
+  <div class="modal-overlay" id="modal-parent">
+    <div class="modal-card" style="max-width: 480px;">
+      <div class="modal-header">
+        <h2 class="modal-title">🔒 Zona Orang Tua</h2>
+        <button class="btn btn-primary btn-close-modal">✖️ Tutup</button>
+      </div>
+
+      <!-- Challenge Gate -->
+      <div class="parent-gate-box" id="parent-gate">
+        <p style="font-size: 1.1rem; font-weight: 600;">Jawab pertanyaan matematika berikut untuk masuk:</p>
+        <h3 style="font-size: 2rem; color: var(--purple);" id="math-question">3 x 4 = ?</h3>
+        <input type="number" class="pin-input" id="parent-answer" placeholder="Jawaban">
+        <button class="btn btn-purple" id="btn-verify-parent">Buka Pengaturan</button>
+      </div>
+
+      <!-- Parent Settings (Hidden by default) -->
+      <div id="parent-settings" style="display: none; display: flex; flex-direction: column; gap: 16px;">
+        <p style="color: green; font-weight: 700;">✅ Akses Diverifikasi</p>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-weight: 700;">Efek Suara & Musik</span>
+          <button class="btn btn-secondary" id="toggle-audio">Aktif 🔊</button>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-weight: 700;">Suara Narator Bahasa Indonesia</span>
+          <button class="btn btn-secondary" id="toggle-speech">Aktif 🗣️</button>
+        </div>
+
+        <hr style="border: 1px solid #eee;">
+
+        <button class="btn btn-primary" id="btn-reset-gallery" style="justify-content: center;">🗑️ Hapus Semua Karya Galeri</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       JAVASCRIPT LOGIC & CANVAS ENGINE
+       ========================================================================== -->
+  <script>
+    /* --------------------------------------------------------------------------
+       1. DATA STRUCTURES & COLOR PALETTE
+       -------------------------------------------------------------------------- */
+    const COLORS = [
+      { name: 'Merah', hex: '#ff4d4d' },
+      { name: 'Oranye', hex: '#ff944d' },
+      { name: 'Kuning', hex: '#ffd11a' },
+      { name: 'Hijau Muda', hex: '#66cc4d' },
+      { name: 'Hijau Tua', hex: '#2eb82e' },
+      { name: 'Biru Muda', hex: '#33ceff' },
+      { name: 'Biru Tua', hex: '#3366ff' },
+      { name: 'Ungu', hex: '#b359f4' },
+      { name: 'Merah Muda', hex: '#ff66cc' },
+      { name: 'Cokelat', hex: '#995c00' },
+      { name: 'Hitam', hex: '#2d3436' },
+      { name: 'Putih', hex: '#ffffff' }
+    ];
+
+    const SKETCHES = [
+      {
+        id: 'cat',
+        name: 'Kucing Manis',
+        category: 'Hewan',
+        fact: 'Kucing suka minum susu dan tidur siang di tempat hangat!',
+        draw: drawCatOutline
+      },
+      {
+        id: 'fish',
+        name: 'Ikan Ceria',
+        category: 'Lautan',
+        fact: 'Ikan bernapas di dalam air menggunakan insang!',
+        draw: drawFishOutline
+      },
+      {
+        id: 'car',
+        name: 'Mobil Balap',
+        category: 'Kendaraan',
+        fact: 'Mobil balap memiliki empat roda dan bisa melaju sangat cepat!',
+        draw: drawCarOutline
+      },
+      {
+        id: 'dino',
+        name: 'Dino Imut',
+        category: 'Dinosaurus',
+        fact: 'Dinosaurus hidup di bumi jutaan tahun yang lalu!',
+        draw: drawDinoOutline
+      },
+      {
+        id: 'rocket',
+        name: 'Roket Angkasa',
+        category: 'Luar Angkasa',
+        fact: 'Roket bisa membawa astronot terbang tinggi ke bulan!',
+        draw: drawRocketOutline
+      }
+    ];
+
+    /* --------------------------------------------------------------------------
+       2. APPLICATION STATE
+       -------------------------------------------------------------------------- */
+    let currentState = {
+      currentColor: COLORS[0].hex,
+      colorName: COLORS[0].name,
+      currentTool: 'bucket', // 'bucket', 'brush', 'sticker', 'eraser'
+      selectedSticker: '⭐',
+      currentSketch: SKETCHES[0],
+      audioEnabled: true,
+      speechEnabled: true,
+      history: []
+    };
+
+    // Canvas DOM Elements & Contexts
+    const canvas = document.getElementById('paint-canvas');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+
+    /* --------------------------------------------------------------------------
+       3. SYNTHETIC AUDIO & SPEECH ENGINE (Web Audio API & Speech Synthesis)
+       -------------------------------------------------------------------------- */
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playSoundEffect(type) {
+      if (!currentState.audioEnabled) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        if (type === 'pop') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.08);
+          gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.08);
+        } else if (type === 'splash') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(250, audioCtx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(500, audioCtx.currentTime + 0.15);
+          gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.15);
+        } else if (type === 'fanfare') {
+          const now = audioCtx.currentTime;
+          [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+            const o = audioCtx.createOscillator();
+            const g = audioCtx.createGain();
+            o.type = 'sine';
+            o.frequency.value = freq;
+            o.connect(g);
+            g.connect(audioCtx.destination);
+            g.gain.setValueAtTime(0.2, now + i * 0.1);
+            g.gain.exponentialRampToValueAtTime(0.01, now + i * 0.1 + 0.2);
+            o.start(now + i * 0.1);
+            o.stop(now + i * 0.1 + 0.2);
+          });
+        }
+      } catch (e) {
+        console.log('Audio Context Error:', e);
+      }
+    }
+
+    function speakText(text) {
+      if (!currentState.speechEnabled || !('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'id-ID';
+      utterance.rate = 0.9;
+      utterance.pitch = 1.2; // Friendly tone for toddlers
+      window.speechSynthesis.speak(utterance);
+    }
+
+    /* --------------------------------------------------------------------------
+       4. OUTLINE DRAWING FUNCTIONS (Vector Sketsa Kontur Bahasa Canvas)
+       -------------------------------------------------------------------------- */
+    function clearAndSetupCanvas() {
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      currentState.currentSketch.draw();
+      saveHistoryState();
+    }
+
+    function drawCatOutline() {
+      ctx.lineWidth = 8;
+      ctx.strokeStyle = '#2d3436';
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      // Cat Head
+      ctx.beginPath();
+      ctx.arc(400, 320, 140, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Ears
+      ctx.beginPath();
+      ctx.moveTo(290, 230); ctx.lineTo(250, 100); ctx.lineTo(350, 190);
+      ctx.moveTo(510, 230); ctx.lineTo(550, 100); ctx.lineTo(450, 190);
+      ctx.stroke();
+
+      // Eyes
+      ctx.beginPath();
+      ctx.arc(340, 300, 18, 0, Math.PI * 2);
+      ctx.arc(460, 300, 18, 0, Math.PI * 2);
+      ctx.fillStyle = '#2d3436';
+      ctx.fill();
+
+      // Nose & Mouth
+      ctx.beginPath();
+      ctx.arc(400, 340, 10, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(380, 355, 20, 0, Math.PI);
+      ctx.arc(420, 355, 20, 0, Math.PI);
+      ctx.stroke();
+
+      // Whiskers
+      ctx.beginPath();
+      ctx.moveTo(270, 330); ctx.lineTo(190, 320);
+      ctx.moveTo(270, 350); ctx.lineTo(190, 360);
+      ctx.moveTo(530, 330); ctx.lineTo(610, 320);
+      ctx.moveTo(530, 350); ctx.lineTo(610, 360);
+      ctx.stroke();
+    }
+
+    function drawFishOutline() {
+      ctx.lineWidth = 8;
+      ctx.strokeStyle = '#2d3436';
+      ctx.lineCap = 'round';
+
+      // Fish Body
+      ctx.beginPath();
+      ctx.ellipse(380, 300, 180, 120, 0, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Tail
+      ctx.beginPath();
+      ctx.moveTo(550, 300); ctx.lineTo(680, 200); ctx.lineTo(650, 300); ctx.lineTo(680, 400); ctx.closePath();
+      ctx.stroke();
+
+      // Fins
+      ctx.beginPath();
+      ctx.moveTo(380, 180); ctx.quadraticCurveTo(420, 100, 480, 180);
+      ctx.moveTo(380, 420); ctx.quadraticCurveTo(420, 500, 480, 420);
+      ctx.stroke();
+
+      // Eye
+      ctx.beginPath();
+      ctx.arc(260, 270, 20, 0, Math.PI * 2);
+      ctx.fillStyle = '#2d3436';
+      ctx.fill();
+
+      // Mouth
+      ctx.beginPath();
+      ctx.arc(200, 310, 16, 0, Math.PI);
+      ctx.stroke();
+    }
+
+    function drawCarOutline() {
+      ctx.lineWidth = 8;
+      ctx.strokeStyle = '#2d3436';
+      ctx.lineCap = 'round';
+
+      // Car Body
+      ctx.beginPath();
+      ctx.moveTo(150, 380); ctx.lineTo(650, 380); ctx.lineTo(650, 300);
+      ctx.lineTo(520, 280); ctx.lineTo(440, 180); ctx.lineTo(260, 180);
+      ctx.lineTo(200, 280); ctx.lineTo(150, 300); ctx.closePath();
+      ctx.stroke();
+
+      // Windows
+      ctx.beginPath();
+      ctx.moveTo(275, 195); ctx.lineTo(390, 195); ctx.lineTo(390, 270); ctx.lineTo(215, 270); ctx.closePath();
+      ctx.moveTo(405, 195); ctx.lineTo(505, 280); ctx.lineTo(405, 280); ctx.closePath();
+      ctx.stroke();
+
+      // Wheels
+      ctx.beginPath();
+      ctx.arc(260, 380, 45, 0, Math.PI * 2);
+      ctx.arc(540, 380, 45, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    function drawDinoOutline() {
+      ctx.lineWidth = 8;
+      ctx.strokeStyle = '#2d3436';
+      ctx.lineCap = 'round';
+
+      ctx.beginPath();
+      ctx.arc(280, 200, 70, 0, Math.PI * 2); // Head
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.ellipse(380, 360, 130, 90, 0, 0, Math.PI * 2); // Body
+      ctx.stroke();
+
+      // Eye
+      ctx.beginPath();
+      ctx.arc(260, 180, 12, 0, Math.PI * 2);
+      ctx.fillStyle = '#2d3436';
+      ctx.fill();
+
+      // Tail
+      ctx.beginPath();
+      ctx.moveTo(500, 360); ctx.quadraticCurveTo(650, 340, 680, 260);
+      ctx.stroke();
+    }
+
+    function drawRocketOutline() {
+      ctx.lineWidth = 8;
+      ctx.strokeStyle = '#2d3436';
+      ctx.lineCap = 'round';
+
+      // Rocket Main Body
+      ctx.beginPath();
+      ctx.moveTo(400, 100);
+      ctx.quadraticCurveTo(480, 250, 480, 420);
+      ctx.lineTo(320, 420);
+      ctx.quadraticCurveTo(320, 250, 400, 100);
+      ctx.stroke();
+
+      // Window
+      ctx.beginPath();
+      ctx.arc(400, 260, 40, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Wings
+      ctx.beginPath();
+      ctx.moveTo(320, 340); ctx.lineTo(240, 450); ctx.lineTo(320, 440);
+      ctx.moveTo(480, 340); ctx.lineTo(560, 450); ctx.lineTo(480, 440);
+      ctx.stroke();
+    }
+
+    /* --------------------------------------------------------------------------
+       5. FLOOD FILL & PAINTING LOGIC
+       -------------------------------------------------------------------------- */
+    function hexToRgb(hex) {
+      const bigint = parseInt(hex.replace('#', ''), 16);
+      return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
+    }
+
+    function floodFill(startX, startY, fillColorHex) {
+      const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imgData.data;
+      const targetRgb = hexToRgb(fillColorHex);
+
+      const startPos = (startY * canvas.width + startX) * 4;
+      const startR = data[startPos];
+      const startG = data[startPos + 1];
+      const startB = data[startPos + 2];
+      const startA = data[startPos + 3];
+
+      // Don't fill black outlines
+      if (startR < 50 && startG < 50 && startB < 50 && startA > 200) return;
+      // Don't fill if same color
+      if (startR === targetRgb[0] && startG === targetRgb[1] && startB === targetRgb[2]) return;
+
+      const queue = [[startX, startY]];
+
+      while (queue.length > 0) {
+        const [x, y] = queue.pop();
+        const pos = (y * canvas.width + x) * 4;
+
+        if (x < 0 || x >= canvas.width || y < 0 || y >= canvas.height) continue;
+
+        if (data[pos] === startR && data[pos + 1] === startG && data[pos + 2] === startB && data[pos + 3] === startA) {
+          data[pos] = targetRgb[0];
+          data[pos + 1] = targetRgb[1];
+          data[pos + 2] = targetRgb[2];
+          data[pos + 3] = 255;
+
+          queue.push([x + 1, y]);
+          queue.push([x - 1, y]);
+          queue.push([x, y + 1]);
+          queue.push([x, y - 1]);
+        }
+      }
+      ctx.putImageData(imgData, 0, 0);
+      playSoundEffect('splash');
+      saveHistoryState();
+    }
+
+    // Drawing with Brush / Eraser
+    let isDrawing = false;
+    let lastX = 0, lastY = 0;
+
+    function getCanvasCoords(e) {
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      return {
+        x: Math.floor((clientX - rect.left) * scaleX),
+        y: Math.floor((clientY - rect.top) * scaleY)
+      };
+    }
+
+    function handleStart(e) {
+      const { x, y } = getCanvasCoords(e);
+      if (currentState.currentTool === 'bucket') {
+        floodFill(x, y, currentState.currentColor);
+      } else if (currentState.currentTool === 'sticker') {
+        ctx.font = '60px serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(currentState.selectedSticker, x, y);
+        playSoundEffect('pop');
+        saveHistoryState();
+      } else {
+        isDrawing = true;
+        lastX = x;
+        lastY = y;
+      }
+    }
+
+    function handleMove(e) {
+      if (!isDrawing) return;
+      const { x, y } = getCanvasCoords(e);
+      ctx.beginPath();
+      ctx.moveTo(lastX, lastY);
+      ctx.lineTo(x, y);
+      ctx.strokeStyle = currentState.currentTool === 'eraser' ? '#ffffff' : currentState.currentColor;
+      ctx.lineWidth = currentState.currentTool === 'eraser' ? 36 : 18;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.stroke();
+      lastX = x;
+      lastY = y;
+    }
+
+    function handleEnd() {
+      if (isDrawing) {
+        isDrawing = false;
+        saveHistoryState();
+      }
+    }
+
+    /* --------------------------------------------------------------------------
+       6. UNDO HISTORY & STORAGE
+       -------------------------------------------------------------------------- */
+    function saveHistoryState() {
+      if (currentState.history.length >= 10) currentState.history.shift();
+      currentState.history.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+    }
+
+    function undoLastAction() {
+      if (currentState.history.length > 1) {
+        currentState.history.pop();
+        const prevState = currentState.history[currentState.history.length - 1];
+        ctx.putImageData(prevState, 0, 0);
+        playSoundEffect('pop');
+      }
+    }
+
+    function saveArtworkToGallery() {
+      const dataUrl = canvas.toDataURL('image/png');
+      const gallery = JSON.parse(localStorage.getItem('coloring_gallery') || '[]');
+      gallery.unshift({
+        id: Date.now(),
+        image: dataUrl,
+        date: new Date().toLocaleDateString('id-ID')
+      });
+      localStorage.setItem('coloring_gallery', JSON.stringify(gallery));
+      playSoundEffect('fanfare');
+      speakText('Karya hebatmu berhasil disimpan!');
+      alert('🌟 Karya lukisanmu berhasil disimpan di galeri!');
+    }
+
+    /* --------------------------------------------------------------------------
+       7. UI INTERACTION & EVENT BINDINGS
+       -------------------------------------------------------------------------- */
+    function renderPalette() {
+      const container = document.getElementById('palette-container');
+      container.innerHTML = '';
+      COLORS.forEach((color, idx) => {
+        const swatch = document.createElement('div');
+        swatch.className = `color-swatch ${idx === 0 ? 'active' : ''}`;
+        swatch.style.backgroundColor = color.hex;
+        swatch.addEventListener('click', () => {
+          document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+          swatch.classList.add('active');
+          currentState.currentColor = color.hex;
+          currentState.colorName = color.name;
+          playSoundEffect('pop');
+          speakText(color.name);
+        });
+        container.appendChild(swatch);
+      });
+    }
+
+    function renderSketches() {
+      const grid = document.getElementById('sketch-grid');
+      grid.innerHTML = '';
+      SKETCHES.forEach(sketch => {
+        const card = document.createElement('div');
+        card.className = 'sketch-card';
+        card.innerHTML = `
+          <div style="font-size: 3rem;">🎨</div>
+          <div class="sketch-name">${sketch.name}</div>
+          <div style="font-size: 0.85rem; color: #888;">${sketch.category}</div>
+        `;
+        card.addEventListener('click', () => {
+          currentState.currentSketch = sketch;
+          document.getElementById('fact-banner').innerText = `✨ ${sketch.fact}`;
+          clearAndSetupCanvas();
+          closeAllModals();
+          speakText(`Mewarnai ${sketch.name}`);
+        });
+        grid.appendChild(card);
+      });
+    }
+
+    function renderGallery() {
+      const container = document.getElementById('gallery-container');
+      const gallery = JSON.parse(localStorage.getItem('coloring_gallery') || '[]');
+      if (gallery.length === 0) {
+        container.innerHTML = `<p style="text-align: center; color: #888; grid-column: 1/-1;">Belum ada karya yang disimpan. Ayo buat karya pertamamu!</p>`;
+        return;
+      }
+      container.innerHTML = '';
+      gallery.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'artwork-card';
+        card.innerHTML = `
+          <img src="${item.image}" class="artwork-img">
+          <div class="artwork-actions">
+            <span style="font-size: 0.85rem; font-weight: 600;">${item.date}</span>
+            <a href="${item.image}" download="karya_mewarnai.png" class="btn btn-accent" style="padding: 4px 10px; font-size: 0.85rem;">📥 Simpan</a>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function closeAllModals() {
+      document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+    }
+
+    // Modal Triggers
+    document.getElementById('btn-theme-modal').addEventListener('click', () => {
+      renderSketches();
+      document.getElementById('modal-theme').classList.add('active');
+    });
+
+    document.getElementById('btn-gallery-modal').addEventListener('click', () => {
+      renderGallery();
+      document.getElementById('modal-gallery').classList.add('active');
+    });
+
+    document.getElementById('btn-parent-modal').addEventListener('click', () => {
+      document.getElementById('modal-parent').classList.add('active');
+    });
+
+    document.querySelectorAll('.btn-close-modal').forEach(btn => {
+      btn.addEventListener('click', closeAllModals);
+    });
+
+    // Tool switching
+    document.querySelectorAll('.tool-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentState.currentTool = btn.dataset.tool;
+        document.getElementById('sticker-container').style.display =
+          currentState.currentTool === 'sticker' ? 'block' : 'none';
+        playSoundEffect('pop');
+      });
+    });
+
+    // Sticker Selection
+    document.querySelectorAll('.sticker-opt').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.sticker-opt').forEach(s => s.classList.remove('active'));
+        btn.classList.add('active');
+        currentState.selectedSticker = btn.dataset.sticker;
+        playSoundEffect('pop');
+      });
+    });
+
+    // Actions
+    document.getElementById('btn-undo').addEventListener('click', undoLastAction);
+    document.getElementById('btn-clear').addEventListener('click', () => {
+      clearAndSetupCanvas();
+      playSoundEffect('pop');
+    });
+    document.getElementById('btn-save').addEventListener('click', saveArtworkToGallery);
+    document.getElementById('btn-download').addEventListener('click', () => {
+      const link = document.createElement('a');
+      link.download = `${currentState.currentSketch.id}_mewarnai.png`;
+      link.href = canvas.toDataURL();
+      link.click();
+    });
+
+    document.getElementById('btn-speak-fact').addEventListener('click', () => {
+      speakText(currentState.currentSketch.fact);
+    });
+
+    // Parental Control Verification
+    document.getElementById('btn-verify-parent').addEventListener('click', () => {
+      const ans = document.getElementById('parent-answer').value;
+      if (parseInt(ans) === 12) {
+        document.getElementById('parent-gate').style.display = 'none';
+        document.getElementById('parent-settings').style.display = 'flex';
+      } else {
+        alert('Jawaban salah. Coba lagi!');
+      }
+    });
+
+    document.getElementById('btn-reset-gallery').addEventListener('click', () => {
+      if (confirm('Apakah Anda yakin ingin menghapus seluruh karya galeri?')) {
+        localStorage.removeItem('coloring_gallery');
+        alert('Galeri telah dibersihkan.');
+        closeAllModals();
+      }
+    });
+
+    // Event Listeners for Canvas
+    canvas.addEventListener('mousedown', handleStart);
+    canvas.addEventListener('mousemove', handleMove);
+    canvas.addEventListener('mouseup', handleEnd);
+    canvas.addEventListener('touchstart', (e) => { e.preventDefault(); handleStart(e); });
+    canvas.addEventListener('touchmove', (e) => { e.preventDefault(); handleMove(e); });
+    canvas.addEventListener('touchend', (e) => { e.preventDefault(); handleEnd(e); });
+
+    /* --------------------------------------------------------------------------
+       8. INITIALIZATION
+       -------------------------------------------------------------------------- */
+    window.addEventListener('load', () => {
+      renderPalette();
+      clearAndSetupCanvas();
+    });
+  </script>
+</body>
+</html>
